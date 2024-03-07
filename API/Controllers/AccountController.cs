@@ -55,13 +55,9 @@ public class AccountController : BaseApiController
     {
         var user = await _userManager.Users
             .Include(p => p.Photos)
-            .SingleOrDefaultAsync(x => x.UserName == loginDto.Username);
+            .SingleOrDefaultAsync(x => x.UserName.ToLower() == loginDto.Username.ToLower());
 
         if (user == null) return Unauthorized("Invalid username");
-
-        var result = await _userManager.CheckPasswordAsync(user, loginDto.Password);
-
-        if (!result) return Unauthorized();
 
         return new UserDto
         {
